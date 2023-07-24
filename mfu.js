@@ -1,10 +1,6 @@
 const express = require('express');
 const { engine } = require('express-handlebars');
-
-const handlers = require('./controllers/handlers');
-
-const homeRouter = require('./router/home');
-const manualRouter = require('./router/manual');
+const router = require('./routes');
 
 const app = express();
 
@@ -13,15 +9,7 @@ app.set('view engine', '.hbs');
 app.set('views', './views');
 
 app.use(express.static(__dirname + '/public'));
-
-app.use('/', homeRouter);
-app.use('/manual', manualRouter);
-
-// 404 Page
-app.use(handlers.notFound);
-
-// 500 Page
-app.use(handlers.serverError);
+app.use(router);
 
 const PORT= process.env.PORT || 3010;
 

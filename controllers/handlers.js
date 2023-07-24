@@ -5,9 +5,11 @@ exports.notFound = (req, res) => {
     });
 };
 
+/* eslint-disable no-unused-vars */
 exports.serverError = (err, req, res, next) => {
     res.status(500);
     res.render('500', {
         title: '500 -  Ошибка сервера'
     });
 };
+/* eslint-enable no-unused-vars */

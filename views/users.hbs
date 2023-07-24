@@ -1,0 +1,48 @@
+{{> header }}
+<main class="main main-user">
+    <div class="qr-block">
+        <div class="qr-block__inner">
+            <div class="qr-block__img">
+                <picture>
+                    <source srcSet="images/qr-code.avif" type="image/avif" />
+                    <source srcset="images/qr-code.webp" type="image/webp">
+                    <img src="images/qr-code.png" alt="QR-code" />
+                </picture>
+            </div>
+            <p>Залогиниться по QR-коду</p>
+        </div>
+    </div>
+    <div class="user-data">
+        <div class="user-data__item avatar">
+            <p>фото</p>
+            <!--<picture>
+                <source srcSet="" type="image/avif" />
+                <source srcset="" type="image/webp">
+                <img src="" alt="фото" />
+            </picture>-->
+        </div>
+        <div class="user-data__item name">
+            <form action="#" class="name__form">
+                <label for="name">ФИО</label>
+                <input type="text" id="name" name="name" value="...">
+            </form>
+        </div>
+        <div class="user-data__item data">
+            <form action="#" class="data__form">
+                <div class="data__form--item">
+                    <label for="birthday">Дата рождения</label>
+                    <input type="date" id="birthday" name="birthday" value="" min="1900-01-01">
+                </div>
+                <div class="data__form--item">
+                    <label for="passport">Паспорт</label>
+                    <input type="text" id="passport" name="passport" placeholder="...">
+                </div>
+                <div class="data__form--item">
+                    <label for="snils">Снилс</label>
+                    <input type="text" id="snils" name="snils" placeholder="...">
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{{> footer }}

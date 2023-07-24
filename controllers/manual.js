@@ -1,7 +1,7 @@
 const getManualHandler = (req, res) => {
     res.render('manual', {
-        layout: 'other.hbs',
-        title: 'Manual'
+        title: 'Инструкция',
+        pageClass: 'manual',
     });
 };
 

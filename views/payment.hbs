@@ -1,0 +1,26 @@
+{{> header }}
+<main class="main main-payment">
+    <div class="main-payment__item cart">
+        <picture class="payment__item--img">
+            <source srcSet="images/cart-lines2.avif" type="image/avif" />
+            <source srcset="images/cart-line2.webp" type="image/webp">
+            <img src="images/cart-lines2.png" alt="описание" />
+        </picture>
+        <div class="payment__item--inner">
+            <h2>Оплатить банковской картой</h2>
+            <a class="classicBtn" href="">Оплатить</a>
+        </div>
+    </div>
+    <div class="main-payment__item qr">
+        <picture class="payment__item--img">
+            <source srcSet="images/refh.avif" type="image/avif" />
+            <source srcset="images/refh.webp" type="image/webp">
+            <img src="images/refh.png" alt="описание" />
+        </picture>
+        <div class="payment__item--inner">
+            <h2>Оплатить по QR-коду</h2>
+            <a class="classicBtn" href="/qr">Оплатить</a>
+        </div>
+    </div>
+</main>
+{{> footer }}

@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>SVG stack preview | svg-sprite</title>
+        <style>
+            body {
+                padding: 0;
+                margin: 0;
+                color: #666;
+                background: #fafafa;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 1em;
+                line-height: 1.4;
+            }
+
+            header {
+                display: block;
+                padding: 3em 3em 2em;
+                background-color: #fff;
+            }
+
+            header p {
+                margin: 2em 0 0;
+            }
+
+            section {
+                border-top: 1px solid #eee;
+                padding: 2em 3em 0;
+            }
+
+            section ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            section li {
+                display: inline-block;
+                background-color: #fff;
+                position: relative;
+                margin: 0 2em 2em 0;
+                vertical-align: top;
+                border: 1px solid #ccc;
+                padding: 1em 1em 3em;
+                cursor: default;
+            }
+
+            .icon-box {
+                margin: 0;
+                width: 144px;
+                height: 144px;
+                position: relative;
+                background: #ccc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath fill='%23fff' d='M6 0h6v6H6zM0 6h6v6H0z'/%3E%3C/svg%3E") top left repeat;
+                border: 1px solid #ccc;
+                display: table-cell;
+                vertical-align: middle;
+                text-align: center;
+            }
+
+            .icon {
+                display: inline-block;
+            }
+
+            h1 {
+                margin-top: 0;
+            }
+
+            h2 {
+                margin: 0;
+                padding: 0;
+                font-size: 1em;
+                font-weight: 400;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                position: absolute;
+                left: 1em;
+                right: 1em;
+                bottom: 1em;
+            }
+
+            footer {
+                display: block;
+                margin: 0;
+                padding: 0 3em 3em;
+            }
+
+            footer p {
+                margin: 0;
+                font-size: .7em;
+            }
+
+            footer a {
+                color: #0f7595;
+                margin-left: 0;
+            }
+        </style>
+
+<!--
+Sprite shape dimensions
+====================================================================================================
+You will need to set the sprite shape dimensions via CSS when you use them as stack SVGs, otherwise
+they would become a huge 100% in size. You may use the following dimension classes for doing so.
+They might well be outsourced to an external stylesheet of course.
+-->
+
+<style>
+ .svg-arrow-dims { width: 59px; height: 24px; }
+ .svg-battery-dims { width: 91px; height: 88px; }
+ .svg-cold-water-dims { width: 94px; height: 93px; }
+ .svg-electro-dims { width: 92px; height: 89px; }
+ .svg-hot-water-dims { width: 95px; height: 95px; }
+ .svg-icon1-dims { width: 82px; height: 65px; }
+ .svg-icon2-dims { width: 68px; height: 68px; }
+ .svg-icon3-dims { width: 68px; height: 63px; }
+ .svg-icon4-dims { width: 70px; height: 70px; }
+ .svg-icon5-dims { width: 58px; height: 64px; }
+ .svg-icon6-dims { width: 74px; height: 70px; }
+ .svg-icon7-dims { width: 64px; height: 63px; }
+ .svg-logo-dims { width: 277px; height: 93px; }
+ .svg-logo-mini-dims { width: 227px; height: 75px; }
+ .svg-qr-dims { width: 500px; height: 500px; }
+</style>
+
+<!--
+====================================================================================================
+-->
+
+    </head>
+    <body>
+        <header>
+            <h1>SVG stack preview</h1>
+            <p>This preview features an SVG stack. Please have a look at the HTML source for further details and be aware of the following constraints:</p>
+            <ul>
+                <li>Your browser has to <a href="https://caniuse.com/svg-fragment" target="_blank" rel="noopener noreferrer">support SVG fragment identifiers</a> for SVG stacks to work.</li>
+                <li>Support for SVG fragment identifiers hasn't always been that decent. For older browsers you will have to use some prolyfill like <a href="https://github.com/preciousforever/SVG-Stacker/blob/master/fixsvgstack.jquery.js" target="_blank" rel="noopener noreferrer">fixsvgstack.jquery.js</a>.</li>
+            </ul>
+        </header>
+        <section>
+
+<!--
+SVG stack
+====================================================================================================
+These SVG images make use of fragment identifiers (IDs) to reference certain portions of the
+external sprite. By default, all shapes inside the sprite are hidden by CSS. The `:target` pseudo
+selector is used to show the very shape that is referenced by the fragment identifier.
+-->
+
+            <ul>
+
+             <li title="arrow">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#arrow" class="svg-arrow-dims" alt="arrow">
+                    </div>
+                    <h2>arrow, </h2>
+                </li>
+             <li title="battery">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#battery" class="svg-battery-dims" alt="battery">
+                    </div>
+                    <h2>battery, </h2>
+                </li>
+             <li title="cold-water">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#cold-water" class="svg-cold-water-dims" alt="cold-water">
+                    </div>
+                    <h2>cold-water, </h2>
+                </li>
+             <li title="electro">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#electro" class="svg-electro-dims" alt="electro">
+                    </div>
+                    <h2>electro, </h2>
+                </li>
+             <li title="hot-water">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#hot-water" class="svg-hot-water-dims" alt="hot-water">
+                    </div>
+                    <h2>hot-water, </h2>
+                </li>
+             <li title="icon1">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#icon1" class="svg-icon1-dims" alt="icon1">
+                    </div>
+                    <h2>icon1, </h2>
+                </li>
+             <li title="icon2">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#icon2" class="svg-icon2-dims" alt="icon2">
+                    </div>
+                    <h2>icon2, </h2>
+                </li>
+             <li title="icon3">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#icon3" class="svg-icon3-dims" alt="icon3">
+                    </div>
+                    <h2>icon3, </h2>
+                </li>
+             <li title="icon4">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#icon4" class="svg-icon4-dims" alt="icon4">
+                    </div>
+                    <h2>icon4, </h2>
+                </li>
+             <li title="icon5">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#icon5" class="svg-icon5-dims" alt="icon5">
+                    </div>
+                    <h2>icon5, </h2>
+                </li>
+             <li title="icon6">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#icon6" class="svg-icon6-dims" alt="icon6">
+                    </div>
+                    <h2>icon6, </h2>
+                </li>
+             <li title="icon7">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#icon7" class="svg-icon7-dims" alt="icon7">
+                    </div>
+                    <h2>icon7, </h2>
+                </li>
+             <li title="logo">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#logo" class="svg-logo-dims" alt="logo">
+                    </div>
+                    <h2>logo, </h2>
+                </li>
+             <li title="logo-mini">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#logo-mini" class="svg-logo-mini-dims" alt="logo-mini">
+                    </div>
+                    <h2>logo-mini, </h2>
+                </li>
+             <li title="qr">
+                    <div class="icon-box">
+                        <img src="../sprite.svg#qr" class="svg-qr-dims" alt="qr">
+                    </div>
+                    <h2>qr, </h2>
+                </li>
+         </ul>
+
+<!--
+====================================================================================================
+-->
+
+        </section>
+        <footer>
+            <p>Generated at Mon, 03 Jul 2023 13:09:06 GMT by <a href="https://github.com/svg-sprite/svg-sprite" target="_blank" rel="noopener noreferrer">svg-sprite</a>.</p>
+        </footer>
+    </body>
+</html>
