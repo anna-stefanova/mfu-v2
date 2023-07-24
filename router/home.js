@@ -1,8 +1,8 @@
 const express = require('express');
-const {getManualHandler} = require('../controllers/manual');
+const {getHomeHandler} = require('../controllers/home');
 
 const router = express.Router();
 
-router.get('/', getManualHandler);
+router.get('/', getHomeHandler);
 
 module.exports = router;
