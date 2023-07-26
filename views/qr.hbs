@@ -1,0 +1,23 @@
+{{> header }}
+<main class="main main-qr">
+    <h2 class="main-qr__title">Отсканируйте QR - код</h2>
+    <div class="main-qr__camera">
+        <video id="video"></video>
+    </div>
+    <div class="main-qr__buttons">
+        <a class="classicBtn" id="startButton">Start</a>
+        <a class="classicBtn blue-btn" id="resetButton">Reset</a>
+    </div>
+    <div id="sourceSelectPanel" style="display:none">
+        <label for="sourceSelect">Change video source:</label>
+        <select id="sourceSelect" style="max-width:400px">
+        </select>
+    </div>
+
+    <label>Result:</label>
+    <pre><code id="result"></code></pre>
+</main>
+
+{{> footer }}
+<script src="javascripts/zxing.js"></script>
+<script src="javascripts/qr-scripts.js"></script>

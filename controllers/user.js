@@ -1,5 +1,5 @@
 const getUsersHandler = (req, res) => {
-    res.render('users', {
+    res.render('user', {
         title: 'Личный кабинет клиента',
         pageClass: 'user'
     });

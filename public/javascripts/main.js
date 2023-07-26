@@ -150,3 +150,34 @@ if (printBtns) {
        });
     });
 }
+
+if (document.getElementById('downloadFileForm')) {
+    document.getElementById('downloadFileForm')
+        .addEventListener('submit', (e) => {
+            e.preventDefault();
+            const body = new FormData(e.target);
+
+            const options = {
+                method: 'post',
+                body
+            }
+            const message = document.getElementById('message');
+
+            fetch('/print/api/downloadFile', options)
+                .then(resp => {
+                    if (resp.status < 200 || resp.status >= 300)
+                        throw new Error(`Запрос отклонен со статусом ${resp.status}`)
+                    return resp.json();
+                })
+                .then(json => {
+                    document.getElementById('downloadFileForm').reset();
+                    message.innerHTML = 'Файл успешно загружен';
+                })
+                .catch(err => {
+                    document.getElementById('downloadFileForm').reset();
+                    message.innerHTML = 'Извините, возникли проблемы при загрузке файла. Пожалуйста, попробуйте еще раз'
+                });
+
+        });
+}
+

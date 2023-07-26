@@ -1,8 +1,8 @@
 const express = require('express');
-const {getUsersHandler} = require("../controllers/users");
+const {getQrHandler} = require("../controllers/qr");
 
 const router = express.Router();
 
-router.get('/', getUsersHandler);
+router.get('/', getQrHandler);
 
 module.exports = router;
