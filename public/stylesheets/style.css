@@ -721,10 +721,14 @@ input::-webkit-file-upload-button,
   font-size: 24px;
   margin: 14px 0;
   padding: 14px 25px 14px 19px;
-  cursor: pointer;
 }
 .filesList__item span {
   border-bottom: 2px solid #555555;
+}
+.listItem__btns {
+  display: flex;
+  align-items: center;
+  grid-gap: 20px;
 }
 .filesList__item .printDoc {
   width: 34px;
@@ -733,6 +737,7 @@ input::-webkit-file-upload-button,
   border: none;
   outline: unset;
   padding: 0;
+  cursor: pointer;
 }
 
 .scanner {

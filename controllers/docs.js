@@ -1,20 +1,35 @@
 const {exec, execFile} = require("child_process");
+const Doc = require('../models/Doc');
+const {resolve} = require("path");
 
-const getPrintHandler = (req, res) => {
+const getDocsData = () => Promise.resolve(Doc.find().lean());
+const docsMiddleware = async (req, res, next) => {
+    if (!res.locals.partials) res.locals.partials = {}
+    res.locals.partials.docsContext = await getDocsData();
+    next()
+}
+
+const getPrintHandler = async (req, res) => {
+    const data = await Doc.find().lean();
+
     res.render('docs', {
         title: 'Печать документов',
         pageClass: 'print',
         message: '',
-       /* links: data['files']*/
+        docs: data
     });
 }
 
 const api = {
-    postDownloadFileHandler: (req, res) => {
-
-        console.log(req.file);
-        console.log(req.body.filename);
-        res.send({result: 'success'});
+    postDownloadFileHandler: async (req, res) => {
+        const doc = new Doc({
+            path: req.file.path,
+            title: req.body.filename
+        });
+        await doc.save();
+        const docs = await Doc.find().lean();
+        console.log(docs);
+        res.send({result: 'success', docs});
     }
 };
 
@@ -47,7 +62,7 @@ const postOpenOskHandler = async (req, res) => {
 }
 
 const postOpenFileHandler = async (req, res, next) => {
-    exec(getCommandLine() + ' ' + path.resolve(req.body.fileName));
+    exec(getCommandLine() + ' ' + resolve(req.body.fileName));
     function getCommandLine() {
         switch (process.platform) {
             case 'darwin' : return 'open';
@@ -61,6 +76,7 @@ const postOpenFileHandler = async (req, res, next) => {
 
 module.exports = {
     getPrintHandler,
+    docsMiddleware,
     api,
     postOpenExeHandler,
     postOpenOskHandler,

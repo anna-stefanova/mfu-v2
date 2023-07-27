@@ -81,7 +81,7 @@ const inputFileName = document.getElementById('inputText');
 if (btnRunExe) {
     btnRunExe.addEventListener('click', function (e) {
         e.preventDefault();
-        let url = '/print/openExe';
+        let url = '/docs/openExe';
         let user = JSON.stringify({
             openExe: 'openExe'
         });
@@ -95,7 +95,7 @@ if (btnRunExe) {
 if (inputFileName) {
     inputFileName.addEventListener('click', function (e) {
         e.preventDefault();
-        let url = '/print/openOsk';
+        let url = '/docs/openOsk';
         let data = JSON.stringify({
             openExe: 'openOsk'
         });
@@ -132,24 +132,30 @@ async function getAllData(url, data) {
 * 3) выводить не больше 15? файлов на страницу
 *
 * */
-const printBtns = document.querySelectorAll('#printDoc');
-if (printBtns) {
-    printBtns.forEach(btn => {
-       btn.addEventListener('click', function (e) {
-          e.preventDefault();
+
+function printDocument() {
+    const printBtns = document.querySelectorAll('#printDoc');
+    if (printBtns) {
+        printBtns.forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
 
 
-           let url = '/print/openFile';
-           let data = JSON.stringify({
-               fileName: this.getAttribute('data-name'),
-           });
+                let url = '/docs/openFile';
+                let data = JSON.stringify({
+                    fileName: this.getAttribute('data-name'),
+                });
 
-           getAllData(url, data).catch(error => {
-               error.message; // 'An error has occurred: 404'
-           });
-       });
-    });
+                getAllData(url, data).catch(error => {
+                    error.message; // 'An error has occurred: 404'
+                });
+            });
+        });
+    }
 }
+
+printDocument();
+
 
 if (document.getElementById('downloadFileForm')) {
     document.getElementById('downloadFileForm')
@@ -163,7 +169,7 @@ if (document.getElementById('downloadFileForm')) {
             }
             const message = document.getElementById('message');
 
-            fetch('/print/api/downloadFile', options)
+            fetch('/docs/api/downloadFile', options)
                 .then(resp => {
                     if (resp.status < 200 || resp.status >= 300)
                         throw new Error(`Запрос отклонен со статусом ${resp.status}`)
@@ -172,6 +178,7 @@ if (document.getElementById('downloadFileForm')) {
                 .then(json => {
                     document.getElementById('downloadFileForm').reset();
                     message.innerHTML = 'Файл успешно загружен';
+                    printDocument();
                 })
                 .catch(err => {
                     document.getElementById('downloadFileForm').reset();

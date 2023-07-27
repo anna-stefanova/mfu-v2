@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 
-const {getPrintHandler, postOpenOskHandler, postOpenFileHandler, postOpenExeHandler, api} = require("../controllers/docs");
+const {getPrintHandler, postOpenOskHandler, postOpenFileHandler, postOpenExeHandler, api, docsMiddleware} = require("../controllers/docs");
 const {transliterate} = require('../controllers/handlers');
 
 const router = express.Router();
@@ -19,8 +19,8 @@ const storageConfig = multer.diskStorage({
 
 router.use(multer({storage: storageConfig}).single('file'));
 
-router.get('/', getPrintHandler);
-router.post('/api/downloadFile', api.postDownloadFileHandler, upload.single('file'));
+router.get('/', docsMiddleware, getPrintHandler);
+router.post('/api/downloadFile', docsMiddleware, api.postDownloadFileHandler, upload.single('file'));
 router.post('/openExe', postOpenExeHandler)
 router.post('/openOsk', postOpenOskHandler);
 router.post('/openFile', postOpenFileHandler);
