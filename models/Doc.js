@@ -1,6 +1,6 @@
 const { Schema, model} = require('mongoose');
 
-const schema = new Schema({
+const docSchema = new Schema({
     path: {
         type: String,
         required: true
@@ -11,4 +11,4 @@ const schema = new Schema({
 
 });
 
-module.exports = model('Doc', schema);
+module.exports = model('Doc', docSchema);

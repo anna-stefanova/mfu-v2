@@ -730,7 +730,8 @@ input::-webkit-file-upload-button,
   align-items: center;
   grid-gap: 20px;
 }
-.filesList__item .printDoc {
+.filesList__item .printDoc,
+.filesList__item .deleteDoc {
   width: 34px;
   height: 34px;
   background-color: inherit;
@@ -738,6 +739,12 @@ input::-webkit-file-upload-button,
   outline: unset;
   padding: 0;
   cursor: pointer;
+}
+.filesList__item .printDoc:hover {
+  fill: green;
+}
+.filesList__item .deleteDoc:hover {
+  fill: red;
 }
 
 .scanner {

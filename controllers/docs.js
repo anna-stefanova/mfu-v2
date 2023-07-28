@@ -1,6 +1,7 @@
 const {exec, execFile} = require("child_process");
 const Doc = require('../models/Doc');
 const {resolve} = require("path");
+const fs = require('fs');
 
 const getDocsData = () => Promise.resolve(Doc.find().lean());
 const docsMiddleware = async (req, res, next) => {
@@ -10,27 +11,35 @@ const docsMiddleware = async (req, res, next) => {
 }
 
 const getPrintHandler = async (req, res) => {
-    const data = await Doc.find().lean();
 
     res.render('docs', {
         title: 'Печать документов',
         pageClass: 'print',
-        message: '',
-        docs: data
+        message: ''
     });
 }
 
 const api = {
-    postDownloadFileHandler: async (req, res) => {
+    addSingleFileHandler: async (req, res, next) => {
         const doc = new Doc({
             path: req.file.path,
             title: req.body.filename
         });
         await doc.save();
-        const docs = await Doc.find().lean();
-        console.log(docs);
-        res.send({result: 'success', docs});
-    }
+
+        res.send({result: 'success', el: doc});
+    },
+    deleteSingleFileHandler: async(req, res, next) => {
+        fs.unlink(req.body.path, (err) => {
+            if (err) {
+                console.log(err);
+            }
+        })
+        const doc = await Doc.findOneAndDelete({ _id: req.params.id });
+        if (doc) res.send(doc);
+        else res.sendStatus(404);
+    },
+
 };
 
 const postOpenExeHandler = async (req, res) => {

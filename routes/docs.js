@@ -20,7 +20,8 @@ const storageConfig = multer.diskStorage({
 router.use(multer({storage: storageConfig}).single('file'));
 
 router.get('/', docsMiddleware, getPrintHandler);
-router.post('/api/downloadFile', docsMiddleware, api.postDownloadFileHandler, upload.single('file'));
+router.post('/api/downloadFile', api.addSingleFileHandler, upload.single('file'));
+router.delete('/api/deleteFile/:id', api.deleteSingleFileHandler);
 router.post('/openExe', postOpenExeHandler)
 router.post('/openOsk', postOpenOskHandler);
 router.post('/openFile', postOpenFileHandler);
