@@ -5,6 +5,8 @@ const fs = require('node:fs');
 const router = require('./routes');
 const mongoose = require("mongoose");
 
+const DB = require('config');
+
 const dataDir = path.resolve(__dirname, '..', 'uploads');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
 
@@ -27,7 +29,7 @@ const PORT= process.env.PORT || 3010;
 
 async function start() {
     try {
-        await mongoose.connect('mongodb+srv://stefaa:1q2w3e4r@cluster0.tjrmmbf.mongodb.net/?retryWrites=true&w=majority')
+        await mongoose.connect(DB)
             .then(() => console.log('Connected!'));
         if (require.main === module) {
             app.listen(PORT, () => console.log(`Express run on the http://localhost:${PORT}; press Ctrl+C for finishing`));
