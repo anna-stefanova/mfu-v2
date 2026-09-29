@@ -3,7 +3,9 @@ const Doc = require('../models/Doc');
 const {resolve} = require("path");
 const fs = require('fs');
 
-const getDocsData = () => Promise.resolve(Doc.find().lean());
+// Получение данных без async/await (SQLite работает мгновенно
+const getDocsData = () => Doc.find().lean();
+
 const docsMiddleware = async (req, res, next) => {
     if (!res.locals.partials) res.locals.partials = {}
     res.locals.partials.docsContext = await getDocsData();
@@ -11,7 +13,6 @@ const docsMiddleware = async (req, res, next) => {
 }
 
 const getPrintHandler = async (req, res) => {
-
     res.render('docs', {
         title: 'Печать документов',
         pageClass: 'print',
@@ -20,14 +21,20 @@ const getPrintHandler = async (req, res) => {
 }
 
 const api = {
-    addSingleFileHandler: async (req, res, next) => {
-        const doc = new Doc({
-            path: req.file.path,
-            title: req.body.filename
-        });
-        await doc.save();
+    addSingleFileHandler: (req, res, next) => {
 
-        res.send({result: 'success', el: doc});
+        try {
+            const doc = new Doc({
+                path: req.file.path,
+                title: req.body.filename
+            });
+            doc.save();
+
+            res.send({result: 'success', el: doc});
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({ result: 'error', error: error.message });
+        }
     },
     deleteSingleFileHandler: async(req, res, next) => {
         fs.unlink(req.body.path, (err) => {

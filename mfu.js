@@ -3,9 +3,6 @@ const { engine } = require('express-handlebars');
 const path = require("node:path");
 const fs = require('node:fs');
 const router = require('./routes');
-const mongoose = require("mongoose");
-
-const DB = require('config');
 
 const dataDir = path.resolve(__dirname, '..', 'uploads');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
@@ -25,20 +22,24 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(router);
 
-const PORT= process.env.PORT || 3010;
-
-async function start() {
-    try {
-        await mongoose.connect(DB)
-            .then(() => console.log('Connected!'));
-        if (require.main === module) {
-            app.listen(PORT, () => console.log(`Express run on the http://localhost:${PORT}; press Ctrl+C for finishing`));
-        } else {
-            module.exports = app;
+function startServer(port = 3010) {
+    return new Promise((resolve, reject) => {
+        try {
+            const server = app.listen(port, () => {
+                console.log(`Express runs locally on http://localhost:${port}`);
+                resolve(server)
+            })
+        } catch (error) {
+            console.error("Failed to start Express server", error);
+            reject(error);
         }
-    } catch (e) {
-        console.log(e);
-    }
+    });
 }
 
-start();
+// Позволяет запускать файл напрямую без Electron, если нужно (node mfu.js)
+if (require.main === module) {
+    const PORT = process.env.PORT || 3010;
+    startServer(PORT);
+}
+
+module.exports = { app, startServer };

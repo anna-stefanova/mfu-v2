@@ -1,3 +1,5 @@
+let sliderIntro = null;
+
 try {
     const sliderIntro = new Swiper('#mainSwiper', {
         speed: 4000,
@@ -12,54 +14,45 @@ try {
         },
     });
 } catch (e) {
-    console.log(e);
+    console.error('Ошибка инициализации Swiper:', e);
 }
 /* функция добавления ведущих нулей */
 /* (если число меньше десяти, перед числом добавляем ноль) */
-function zero_first_format(value)
-{
-    if (value < 10)
-    {
-        value='0'+value;
-    }
-    return value;
+function zero_first_format(value) {
+    return value < 10 ? '0' + value : value;
 }
 
 /* функции получения текущей даты и времени */
-function currentDate()
-{
-    const current_datetime = new Date();
-    const day = zero_first_format(current_datetime.getDate());
-    const month = zero_first_format(current_datetime.getMonth()+1);
-    const year = current_datetime.getFullYear();
-
-    return [day, month, year].join('.');
+function currentDate() {
+    const d = new Date();
+    return [
+        zero_first_format(d.getDate()),
+        zero_first_format(d.getMonth() + 1),
+        d.getFullYear()
+    ].join('.');
 }
-function currentTime()
-{
-    const current_datetime = new Date();
-    const hours = zero_first_format(current_datetime.getHours());
-    const minutes = zero_first_format(current_datetime.getMinutes());
 
-    return [hours, minutes].join(':');
+function currentTime() {
+    const d = new Date();
+    return [
+        zero_first_format(d.getHours()),
+        zero_first_format(d.getMinutes())
+    ].join(':');
 }
 
 /* выводим текущую дату и время на сайт в блок с id "current_date_time_block" */
 const dateBlock = document.querySelector('#current_date_time_block .date');
 if (dateBlock) {
-    dateBlock.innerHTML = currentDate();
-    setInterval(() => {
-        dateBlock.innerHTML = currentDate();
-    }, 60000);
+    dateBlock.textContent = currentDate();
+    setInterval(() => { dateBlock.textContent = currentDate(); }, 60000);
 }
 
 const timeBlock = document.querySelector('#current_date_time_block .time');
 if (timeBlock) {
-    timeBlock.innerHTML = currentTime();
-    setInterval(() => {
-        timeBlock.innerHTML = currentTime();
-    }, 1000);
+    timeBlock.textContent = currentTime();
+    setInterval(() => { timeBlock.textContent = currentTime(); }, 1000);
 }
+
  // аккоредеон вопросов и ответов
 $(document).ready(function() {
     $('.accordion__item').on('click', '.accordion-item__trigger', function() {
@@ -266,6 +259,157 @@ function deleteDoc() {
             });
         });
     }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    let clickCount = 0;
+    let clickTimer = null
+    const adminTrigger = document.getElementById('adminTrigger');
+    const adminModal = document.getElementById('adminModal');
+
+    if (adminTrigger && adminTrigger) {
+        adminTrigger.style.userSelect = 'none';
+
+        adminTrigger.addEventListener('click', () => {
+            clickCount++;
+            clearTimeout(clickTimer);
+
+            if (clickCount >= 5) {
+                clickCount = 0;
+                adminModal.style.display = 'flex';
+                // Пауза слайдера при открытии админки
+                if (typeof sliderIntro !== 'undefined' && sliderIntro.autoplay) {
+                    sliderIntro.autoplay.stop();
+                }
+            } else {
+                clickTimer = setTimeout(() => {clickCount = 0;}, 1500);
+            }
+        });
+
+        adminModal.addEventListener('click', (e) => {
+            const isCloseBtn = e.target.classList.contains('close-modal') || e.target.closest('.close-modal');
+            const isBackdrop = e.target.classList.contains('modal-backdrop') || e.target === adminModal;
+
+            if (isCloseBtn || isBackdrop) {
+                adminModal.style.display = 'none';
+
+                // Перезагружаем страницу при закрытии
+                window.location.reload();
+            }
+        });
+    }
+
+    const slideImgInput = document.getElementById('slideImg');
+    const imagePreviewContainer = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    const removePreviewBtn = document.getElementById('removePreviewBtn');
+    const fileLabel = document.getElementById('fileLabel');
+
+    if (slideImgInput) {
+        // 1. Показ превью при выборе файла
+        slideImgInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    previewImg.src = event.target.result;
+                    imagePreviewContainer.style.display = 'block';
+                    if (fileLabel) fileLabel.textContent = file.name;
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                resetImagePreview();
+            }
+        });
+
+        // 2. Очистка превью по кнопке
+        if (removePreviewBtn) {
+            removePreviewBtn.addEventListener('click', () => {
+                resetImagePreview();
+            });
+        }
+    }
+
+    // Вспомогательная функция сброса превью
+    function resetImagePreview() {
+        slideImgInput.value = '';
+        previewImg.src = '';
+        imagePreviewContainer.style.display = 'none';
+        if (fileLabel) fileLabel.textContent = 'Выберите файл или перетащите сюда';
+    }
+
+    // Обработка формы добавления слайда
+    const addSlideForm = document.getElementById('addSlideForm');
+    if (addSlideForm) {
+        addSlideForm.addEventListener('submit', async(e) => {
+            e.preventDefault();
+            const formData = new FormData(addSlideForm);
+
+            try {
+                const res = await fetch('/api/slides', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.result === 'success' && data.slide) {
+                    // Добавляем новый элемент в конец списка внутри модалки
+                    const slidesList = document.getElementById('adminSlidesList');
+                    const newLi = document.createElement('li');
+                    newLi.className = 'slide-item';
+                    newLi.setAttribute('data-id', data.slide._id);
+                    newLi.innerHTML = `
+                        <span class="slide-title">${data.slide.title}</span>
+                        <button type="button" class="btn-delete-slide" onclick="deleteSlide('${data.slide._id}')" title="Удалить слайд">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            <span>Удалить</span>
+                        </button>
+                    `;
+                    slidesList.prepend(newLi); // Помещаем наверх списка
+
+                    // Очищаем форму и сбрасываем превью
+                    addSlideForm.reset();
+                    if (typeof resetImagePreview === 'function') {
+                        resetImagePreview();
+                    }
+                } else {
+                    alert('Ошибка: ' + (data.message || 'Не удалось сохранить'));
+                }
+            } catch (err) {
+                alert('Ошибка отправки формы: ' + err);
+            }
+        });
+    }
+
+});
+
+// Функция удаления слайда
+async function deleteSlide(e, id) {
+    if (e && e.stopPropagation) {
+        e.stopPropagation();
+    }
+
+    if (!confirm('Удалить этот слайд?')) return;
+
+    try {
+        const res = await fetch(`/api/slides/${id}`, {method: 'DELETE'});
+        const data = await res.json();
+
+        if (res.ok && data.result === 'success') {
+            const slideItem = document.querySelector(`#adminSlidesList li[data-id="${id}"]`);
+            if (slideItem) {
+                slideItem.remove();
+            }
+        } else {
+            alert('Ошибка при удалении: ' + (data.message || 'Не удалось удалить слайд'));
+        }
+    } catch (error) {
+        alert('Ошибка сети или сервера: ' + error);
+    }
+
 
 }
 
