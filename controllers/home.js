@@ -2,10 +2,21 @@ const Slide = require('../models/Slide');
 const fs = require('fs');
 const path = require('node:path');
 
+let electronApp;
+try {
+    const electron = require('electron');
+    electronApp = electron.app || (electron.remote && electron.remote.app);
+} catch (e) {
+    electronApp = null;
+}
+
+const userDataPath = electronApp
+    ? electronApp.getPath('userData')
+    : path.resolve(__dirname, '..');
+
 const getHomeHandler = (req, res) => {
     let slides = Slide.find().lean();
 
-    // Если база пустая, подгружаем начальные 4 дефолтных слайда
     if (slides.length === 0) {
         slides = [
             { _id: 1, img_path: 'images/img_4097.png', title: 'Инновационная интерактивная витрина представлена на форуме «E-commerce» в Москве' },
@@ -24,13 +35,13 @@ const getHomeHandler = (req, res) => {
 const api = {
     addSlide: (req, res) => {
         try {
-            if (!req.file) return res.status(400).send({result: 'error', message: 'Файл не загружен'});
+            if (!req.file) return res.status(400).send({ result: 'error', message: 'Файл не загружен' });
 
             if (!req.body.title || !req.body.title.trim()) {
                 return res.status(400).json({ result: 'error', message: 'Заголовок слайда обязателен' });
             }
 
-            // Сохраняем относительный путь для отображения в img src
+            // Относительный URL для тега <img src="uploads/slides/slide_xxx.png">
             const relativePath = 'uploads/slides/' + req.file.filename;
 
             const slide = new Slide({
@@ -39,19 +50,19 @@ const api = {
             });
             slide.save();
 
-            res.send({result: 'success', slide})
+            res.send({ result: 'success', slide });
 
         } catch (error) {
-            res.status(500).json({result: 'error', message: error.message});
+            res.status(500).json({ result: 'error', message: error.message });
         }
     },
     deleteSlide: (req, res) => {
         try {
             const slide = Slide.findOneAndDelete({ _id: req.params.id });
             if (slide) {
-                // Удаляем файл изображения с диска, если он не из базовой папки images/
+                // Если картинка загружена пользователем, удаляем её из AppData
                 if (slide.img_path.startsWith('uploads/')) {
-                    const fullPath = path.join(__dirname, '..', 'public', slide.img_path);
+                    const fullPath = path.join(userDataPath, slide.img_path);
                     if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
                 }
                 return res.json({ result: 'success', id: req.params.id });
@@ -63,6 +74,6 @@ const api = {
             res.status(500).json({ result: 'error', message: error.message });
         }
     }
-}
+};
 
 module.exports = { getHomeHandler, api };

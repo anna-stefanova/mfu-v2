@@ -1,11 +1,4 @@
-const Database = require('better-sqlite3');
-const path = require('node:path');
-const fs = require('fs');
-
-const dataDir = path.resolve(__dirname, '..', 'data');
-if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-
-const db = new Database(path.join(dataDir, 'app_data.db'));
+const db = require('../db');
 
 // Создаем таблицу слайдов с дефолтными значениями, если база пустая
 db.exec(`

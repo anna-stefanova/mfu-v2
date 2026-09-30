@@ -4,14 +4,27 @@ const path = require('path');
 const fs = require('fs');
 const {getHomeHandler, api} = require('../controllers/home');
 
-const router = express.Router();
+let electronApp;
+try {
+    const electron = require('electron');
+    electronApp = electron.app || (electron.remote && electron.remote.app);
+} catch (e) {
+    electronApp = null;
+}
+
+const userDataPath = electronApp
+    ? electronApp.getPath('userData')
+    : path.resolve(__dirname, '..');
+
+const slidesDir = path.join(userDataPath, 'uploads', 'slides');
 
 // Конфигурация сохранения слайдов в public/uploads/slides
 const slideStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const dir = path.join(__dirname, '..', 'public', 'uploads', 'slides');
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-        cb(null, dir);
+        if (!fs.existsSync(slidesDir)) {
+            fs.mkdirSync(slidesDir, { recursive: true });
+        }
+        cb(null, slidesDir);
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
@@ -20,6 +33,8 @@ const slideStorage = multer.diskStorage({
 });
 
 const uploadSlide = multer({storage: slideStorage});
+
+const router = express.Router();
 
 router.get('/', getHomeHandler);
 router.post('/api/slides', uploadSlide.single('slideImg'), api.addSlide);

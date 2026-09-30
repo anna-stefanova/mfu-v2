@@ -4,21 +4,38 @@ const path = require("node:path");
 const fs = require('node:fs');
 const router = require('./routes');
 
-const dataDir = path.resolve(__dirname, '..', 'uploads');
-if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
+let electronApp;
+try {
+    const electron = require('electron');
+    electronApp = electron.app || (electron.remote && electron.remote.app);
+} catch (e) {
+    electronApp = null;
+}
+
+const userDataPath = electronApp
+    ? electronApp.getPath('userData')
+    : path.resolve(__dirname);
+
+const uploadsDir = path.join(userDataPath, 'uploads');
+
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 const app = express();
 
 app.engine('.hbs', engine({extname: '.hbs'}));
 app.set('view engine', '.hbs');
-app.set('views', './views');
+app.set('views', path.join(__dirname, 'views'));
 
 // convert form data to JS Object in POST, PUT, PATCH requests
 app.use(express.json());
 // converts form data to JS Object in POST, PUT, PATCH requests
 app.use(express.urlencoded({extended: true}));
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/uploads', express.static(uploadsDir));
 
 app.use(router);
 

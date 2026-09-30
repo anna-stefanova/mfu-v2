@@ -1,16 +1,4 @@
-const Database = require('better-sqlite3');
-const path = require('path');
-const fs =require('fs');
-
-// Создаем папку для базы данных, если ее нет
-const dataDir = path.resolve(__dirname, '..', './data');
-if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-}
-
-// Путь к файлу локальной БД SQLite
-const dbPath = path.join(dataDir, 'app_data.db');
-const db = new Database(dbPath);
+const db = require('../db');
 
 // Инициализация таблицы при старте
 db.exec(`
@@ -18,7 +6,7 @@ db.exec(`
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         path TEXT NOT NULL,
         title TEXT NOT NULL,
-        created_at DATATIME DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
 `);
 
