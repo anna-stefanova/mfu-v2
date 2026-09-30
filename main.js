@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, globalShortcut } = require("electron");
 const path = require("node:path");
 const { startServer } = require('./mfu');
 
@@ -19,7 +19,9 @@ app.whenReady().then(async () => {
         width: 1080,
         height: 1920,
         title: 'MFU App',
-        autoHideMenuBar: false, // скрывает стандартное верхнее меню
+        fullscreen: true,       // Полноэкранный режим
+        frame: false,            // Без стандартной рамки и кнопок закрытия
+        autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: true
@@ -32,6 +34,15 @@ app.whenReady().then(async () => {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
+
+    globalShortcut.register('Escape', () => {
+        app.quit();
+    });
+});
+
+// Очищаем регистрацию горячих клавиш при выходе
+app.on('will-quit', () => {
+    globalShortcut.unregisterAll();
 });
 
 // Закрываем приложение, когда закрыты все окна (Windows/Linux)
