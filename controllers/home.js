@@ -19,10 +19,11 @@ const getHomeHandler = (req, res) => {
 
     if (slides.length === 0) {
         slides = [
-            { _id: 1, img_path: 'images/img_4097.png', title: 'Инновационная интерактивная витрина представлена на форуме «E-commerce» в Москве' },
+            { _id: 1, img_path: 'images/main1.png', title: 'Собянин: Впервые в России начался серийный выпуск ЖК дисплейных модулей' }
+            /*{ _id: 1, img_path: 'images/main1.png', title: 'Инновационная интерактивная витрина представлена на форуме «E-commerce» в Москве' },
             { _id: 2, img_path: 'images/img_0339.png', title: 'Компания NexTouch возглавила рейтинг производителей интерактивных панелей' },
             { _id: 3, img_path: 'images/img_2021.png', title: 'Руководитель NexTouch принял участие в заседании Набсовета ФСИ под председательством министра экономического развития Максима Решетникова' },
-            { _id: 4, img_path: 'images/img_2348.png', title: 'NexTouch представила новую линейку продукции NextPanel 85, NextWall Multitouch и NexTaizer' },
+            { _id: 4, img_path: 'images/img_2348.png', title: 'NexTouch представила новую линейку продукции NextPanel 85, NextWall Multitouch и NexTaizer' },*/
         ];
     }
 
